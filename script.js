@@ -14,6 +14,9 @@ form.addEventListener('submit', addTask);
 taskList.addEventListener('click', removeTask);
 clearBtn.addEventListener('click', clearTask);
 filter.addEventListener('keyup', filterTask);
+document.addEventListener('DOMContentLoaded', getTasks);
+
+
 
 //Define function
 //Add task
@@ -31,6 +34,10 @@ function addTask(e) {
         link.innerHTML = 'x';
         li.appendChild(link);
         taskList.appendChild(li);
+
+        //local storage
+        storeTaskInLocalStorage(taskInput.value);
+
         taskInput.value = '';
 
     }
@@ -46,6 +53,8 @@ function removeTask(e){
             let ele = e.target.parentElement;
             ele.remove();
             //console.log(ele);
+            removefromLS(ele); //
+
 
         }
     }
@@ -61,6 +70,7 @@ function clearTask(e){
    while(taskList.firstChild){
        taskList.removeChild 
    }
+   localStorage.clear();
 }
 
 //filterTask
@@ -78,5 +88,66 @@ function filterTask(e){
              
         }
     });
+
+}
+
+
+//storage in Local storage----check console+storage
+
+
+function storeTaskInLocalStorage(task){
+    let tasks;
+    if(localStorage.getItem('tasks') === null){
+        tasks = [];
+    }else {
+        tasks= JSON.parse(localStorage.getItem('tasks'));
+    }
+    tasks.push(task);
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+ 
+}
+
+//DOM
+function getTasks() {
+    
+    let tasks;
+    if(localStorage.getItem('tasks') === null){
+        tasks = [];
+    }else {
+        tasks= JSON.parse(localStorage.getItem('tasks'));
+    }
+    tasks.forEach(task => {
+
+           //Create li element
+           let li = document.createElement('li');
+           li.appendChild(document.createTextNode(task + " "));
+           let link =document.createElement('a');
+           link.setAttribute("herf", "#");
+           link.innerHTML = 'x';
+           li.appendChild(link);
+           taskList.appendChild(li);
+
+    });
+}
+
+function removefromLS(taskItem){
+     
+    if(localStorage.getItem('tasks') === null){
+        tasks = [];
+    }else {
+        tasks= JSON.parse(localStorage.getItem('tasks'));
+    }
+
+    let  li = tasksItem;
+    li.removeChild(li.lastChild); //<a></a>
+
+    tasks.forEach((task, index)  =>{
+        if(li.textContent.trin() === task){
+            tasks.splice(index, 1);
+        }
+    });
+    localStorage.setItem('task', JSON.stringify(tasks));
+
 
 }
